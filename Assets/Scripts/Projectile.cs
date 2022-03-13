@@ -27,4 +27,5 @@ public class Projectile : MonoBehaviour
     {
         this.projectileSpeed = projectileSpeed;
     }
+
 }

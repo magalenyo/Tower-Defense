@@ -6,10 +6,12 @@ public class Turret : MonoBehaviour
 {
     [SerializeField] private float attackSpeed = 1.0f;
     [SerializeField] private GameObject bulletPrefab;
+    
 
     private Queue<GameObject> enemies = new Queue<GameObject>();
     private GameObject sentry;
     private Transform sentryShotPoint;
+    private Projectile projectile;
 
 
     private float attackTimer = 0.0f;
@@ -23,6 +25,11 @@ public class Turret : MonoBehaviour
         }
 
         attackTimer = attackSpeed;
+
+        if (bulletPrefab)
+        {
+            projectile = bulletPrefab.GetComponent<Projectile>();
+        }
     }
 
     // Update is called once per frame
@@ -49,8 +56,14 @@ public class Turret : MonoBehaviour
     {
         if (enemies.Count > 0 && sentry)
         {
-            Vector3 enemyPosition = enemies.Peek().transform.position;
-            sentry.transform.LookAt(new Vector3(enemyPosition.x, sentry.transform.position.y, enemyPosition.z));
+            GameObject enemyGO = enemies.Peek();
+            Enemy enemy = enemyGO.GetComponent<Enemy>();
+            Vector3 enemyPosition = enemyGO.transform.position;
+            enemyPosition.y = 0;
+            float timeToReach = (enemyPosition - transform.position).magnitude / projectile.GetProjectileSpeed();
+            Vector3 positionToLookAt = enemyPosition + (enemyGO.transform.forward * enemy.GetMovementSpeed() * timeToReach);
+
+            sentry.transform.LookAt(positionToLookAt);
         }
     }
 
