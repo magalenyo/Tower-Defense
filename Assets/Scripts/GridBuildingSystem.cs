@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GridBuildingSystem : MonoBehaviour
 {
+    [SerializeField] private Transform testTransform;
+
     [SerializeField] private int gridWidth = 10;
     [SerializeField] private int gridHeight = 10;
     [SerializeField] private float cellSize = 10f;
@@ -24,10 +26,6 @@ public class GridBuildingSystem : MonoBehaviour
         private int x;
         private int z;
 
-        private const int MIN = 0;
-        private const int MAX = 100;
-        public int value;
-
         public GridObject(GridXZ<GridObject> grid, int x, int z)
         {
             this.grid = grid;
@@ -35,23 +33,9 @@ public class GridBuildingSystem : MonoBehaviour
             this.z = z;
         }
 
-        public void AddValue(int addValue)
-        {
-
-            value += addValue;
-            value = Mathf.Clamp(value, MIN, MAX);
-
-            grid.TriggerObjectChanged(x, z);
-        }
-
-        public float GetValueNormalized()
-        {
-            return (float)value / MAX;
-        }
-
         public override string ToString()
         {
-            return value.ToString();
+            return x + ", " + z;
         }
     }
 
@@ -67,11 +51,14 @@ public class GridBuildingSystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GridObject go = grid.GetGridObject(GridUtils.GetMouseWorldPosition());
-            if (go != null)
-            {
-                go.AddValue(5);
-            }
+            grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+            Instantiate(testTransform, grid.GetWorldPosition(x, z), Quaternion.identity);
+
+            //GridObject go = grid.GetGridObject(GridUtils.GetMouseWorldPosition());
+            //if (go != null)
+            //{
+            //    go.AddValue(5);
+            //}
         }
 
         if (Input.GetMouseButtonDown(1))
