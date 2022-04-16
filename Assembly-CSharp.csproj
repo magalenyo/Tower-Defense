@@ -61,6 +61,7 @@
     <Compile Include="Assets\Scripts\GridUtils.cs" />
     <Compile Include="Assets\Scripts\GridBuildingSystem.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjectTower.cs" />
+    <Compile Include="Assets\Scripts\PlacedObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />

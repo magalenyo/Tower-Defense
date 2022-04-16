@@ -115,4 +115,9 @@ public class GridXZ<TGridObject>
     {
         showDebug = value;
     }
+
+    public float GetCellSize()
+    {
+        return cellSize;
+    }
 }
