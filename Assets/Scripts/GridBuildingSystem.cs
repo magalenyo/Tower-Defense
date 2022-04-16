@@ -25,6 +25,7 @@ public class GridBuildingSystem : MonoBehaviour
         private GridXZ<GridObject> grid;
         private int x;
         private int z;
+        private Transform transform;
 
         public GridObject(GridXZ<GridObject> grid, int x, int z)
         {
@@ -32,10 +33,27 @@ public class GridBuildingSystem : MonoBehaviour
             this.x = x;
             this.z = z;
         }
+        
+        public void SetTransform(Transform transform)
+        {
+            this.transform = transform;
+            grid.TriggerObjectChanged(x, z);
+        }
+
+        public void ClearTransform()
+        {
+            transform = null;
+            grid.TriggerObjectChanged(x, z);
+        }
+
+        public bool CanBuild()
+        {
+            return transform == null;
+        }
 
         public override string ToString()
         {
-            return x + ", " + z;
+            return x + ", " + z + "\n" + transform;
         }
     }
 
@@ -52,7 +70,16 @@ public class GridBuildingSystem : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-            Instantiate(testTransform, grid.GetWorldPosition(x, z), Quaternion.identity);
+            GridObject gridObject = grid.GetGridObject(x, z);
+            if (gridObject.CanBuild())
+            {
+                Transform builtTransform = Instantiate(testTransform, grid.GetWorldPosition(x, z), Quaternion.identity);
+                gridObject.SetTransform(builtTransform);
+            }
+            else
+            {
+                Debug.Log("Can't build");
+            }
 
             //GridObject go = grid.GetGridObject(GridUtils.GetMouseWorldPosition());
             //if (go != null)
