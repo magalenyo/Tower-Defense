@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GridBuildingSystem : MonoBehaviour
 {
+    public static GridBuildingSystem Instance { get; private set; }
+
     [SerializeField] private List<ScriptableObjectTower> placedObjectTypeSOList;
     private ScriptableObjectTower placedObjectTypeSO;
 
@@ -14,8 +17,12 @@ public class GridBuildingSystem : MonoBehaviour
     private GridXZ<GridObject> grid;
     private ScriptableObjectTower.Dir dir = ScriptableObjectTower.Dir.DOWN;
 
+    public event EventHandler OnSelectedChanged;
+
     private void Awake()
     {
+        Instance = this;
+
         grid = new GridXZ<GridObject>(gridWidth, gridHeight, cellSize, Vector3.zero, (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
         grid.SetDebug(true);
         placedObjectTypeSO = placedObjectTypeSOList[0];
@@ -63,14 +70,6 @@ public class GridBuildingSystem : MonoBehaviour
         }
     }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -128,6 +127,40 @@ public class GridBuildingSystem : MonoBehaviour
         {
             dir = ScriptableObjectTower.GetNextDir(dir);
             Debug.Log(dir);
+        }
+    }
+
+    public ScriptableObjectTower GetScriptableObjectTower()
+    {
+        return placedObjectTypeSO;
+    }
+
+    public Vector3 GetMouseWorldSnappedPosition()
+    {
+        Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
+        grid.GetXZ(mousePosition, out int x, out int z);
+
+        if (placedObjectTypeSO != null)
+        {
+            Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
+            Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+            return placedObjectWorldPosition;
+        }
+        else
+        {
+            return mousePosition;
+        }
+    }
+
+    public Quaternion GetPlacedObjectRotation()
+    {
+        if (placedObjectTypeSO != null)
+        {
+            return Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0);
+        }
+        else
+        {
+            return Quaternion.identity;
         }
     }
 }

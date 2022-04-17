@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameString: Tower
   prefab: {fileID: 2158354597732151410, guid: bbc870280630ce24d811128b647b5ba6, type: 3}
-  visual: {fileID: 0}
+  visual: {fileID: 2158354597732151410, guid: bbc870280630ce24d811128b647b5ba6, type: 3}
   width: 2
   height: 2
