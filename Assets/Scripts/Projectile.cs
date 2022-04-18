@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 1.0f;
+    [SerializeField] private GameObject impactEffect;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,14 @@ public class Projectile : MonoBehaviour
     public void SetProjectileSpeed(float projectileSpeed)
     {
         this.projectileSpeed = projectileSpeed;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        GameObject effect = Instantiate(impactEffect, transform.position, transform.rotation);
+        Destroy(effect, 2f);
+
+        Destroy(gameObject);
     }
 
 }

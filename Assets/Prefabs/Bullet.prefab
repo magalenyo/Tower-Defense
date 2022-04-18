@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 12
+  impactEffect: {fileID: 4982057168137973889, guid: 9c2bd688e989bd3449022fcb645f24ba, type: 3}
 --- !u!1 &9145633132875831728
 GameObject:
   m_ObjectHideFlags: 0
